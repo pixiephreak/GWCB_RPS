@@ -1,0 +1,53 @@
+body {
+	margin: 10%;
+	font-family: arial, sans-serif;
+}
+
+h1 {
+	text-align: center;
+	text-transform: uppercase;
+
+}
+
+form {
+	text-align: center;
+	margin: 5%;
+}
+
+input {
+	background-color: #e6fff2;
+	margin: 1%;
+}
+
+button {
+	background-color: #e6fff2;
+	margin: 1%;
+}
+
+#game {
+	margin: auto 10%;
+	border: .5rem solid red;
+	padding: 1%;
+}
+
+#game div{
+	border: .5rem solid red;
+	padding: 10%;
+	width: 5%;
+	display: inline-block;
+	height: 20%;
+}
+
+#game div span{
+	font-size: .25rem;
+}
+
+.game-elem {
+	padding: 5%;
+	margin: 1%;
+	text-align: center;
+	font-size: .25rem;
+
+}
+
+
