@@ -9,12 +9,12 @@
 </head>
 <body>
 	<h1>Rock Paper Scissors</h1>
-	<form>
-	  <div class="form-group">
+	<form id='form'>
+	  <div>
 	    <label for="player-name"></label>
-	    <input class="form-control" id="player-name" type="text" placeholder="Your Name">
+	    <input  id="player-name" type="text" placeholder="Your Name">
 	  </div>
-	  <button class="btn btn-primary" id="start" type="submit">Start</button>
+	  <button id="start" type="submit">Start</button>
 	</form>
 	<div id="game">
 		<div id="player1"><p id="player1-status" class="game-elem">Waiting for player 1</p></div>
@@ -22,5 +22,7 @@
 		<div id="player2"><p id="player2-status" class="game-elem">Waiting for player 2</p></div>
 	</div>
 </body>
+<!-- Firebase Reference -->
+<script src="https://www.gstatic.com/firebasejs/live/3.0/firebase.js"></script>
 <script type="text/javascript" src="assets/app.js"></script>
 </html>

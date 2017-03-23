@@ -15,6 +15,7 @@ var config = {
   storageBucket: "rps-game-d1ec9.appspot.com",
   messagingSenderId: "1058873558218"
 };
+
 firebase.initializeApp(config);
 
 var database = firebase.database();
@@ -22,20 +23,44 @@ var database = firebase.database();
 
 var wins = 0;
 var losses = 0;
-var player1;
-var player2;
-
-database.ref().on("value", snapshot(snapshot));
-
-function snapshot(snapshot) {
-	//check if player one exists yet. it player 1 exists, set player two. if player1 !exists, set player1
-	if (snapshot.child('player1').exists())
+player1 = {
+	name:'',
+	wins:0,
+	losses:0
 }
+player2 = {
+	name:'',
+	wins:0,
+	losses:0
+}
+
+// database.ref().on("value", snapshot(snapshot));
+
+// function snapshot(snapshot) {
+// 	//check if player one exists yet. if player1, set player2 status. if player1 !exist, set player1 status
+// 	if (snapshot.child('player1').exists()){
+// 		document.getElementById('player1-status').innerHTML()
+// 	}
+// }
 
 document.getElementById('start').addEventListener("click", displayPlayer);
 
 function displayPlayer() {
 	event.preventDefault();
-	var player = document.getElementById('player-name').value;
-	document.getElementById("player1").innerHTML = `<p>${player}</p><span>Wins:${wins} Losses:${losses}</span>`;
+	var playerName = document.getElementById('player-name').value;
+	if(player1.name === ''){
+		player1.name = playerName;
+		document.getElementById("player1").innerHTML = `<p>${player1.name}</p><span>Wins:${wins} Losses:${losses}</span>`;
+		  // Save the new price in Firebase
+		database.ref().set({
+		  player1 : player1
+		});
+	}else{
+		player2.name = playerName;
+		document.getElementById("player2").innerHTML = `<p>${player2.name}</p><span>Wins:${wins} Losses:${losses}</span>`;
+		database.ref().set({
+		  player1 : player1
+		});
+		document.getElementById('form').style.visibility = "hidden";
+	}
 }
