@@ -8,59 +8,62 @@
 // Styling and theme are completely up to you. Get Creative!
 // Initialize Firebase
 
-var config = {
-  apiKey: "AIzaSyDmkjCyThokV22fOMuDUGbwafvYB3bxCDg",
-  authDomain: "rps-game-d1ec9.firebaseapp.com",
-  databaseURL: "https://rps-game-d1ec9.firebaseio.com",
-  storageBucket: "rps-game-d1ec9.appspot.com",
-  messagingSenderId: "1058873558218"
-};
+function App(){
 
-firebase.initializeApp(config);
+	this.database = firebase.database();
+	this.start = document.getElementById('start');
 
-var database = firebase.database();
+	this.wins = 0;
+	this.losses = 0;
+	this.player1 = {
+		name:'',
+		wins:0,
+		losses:0
+	}
+	this.player2 = {
+		name:'',
+		wins:0,
+		losses:0
+	}
 
+	// database.ref().on("child_added", snapshot(snapshot));
 
-var wins = 0;
-var losses = 0;
-player1 = {
-	name:'',
-	wins:0,
-	losses:0
+	// function snapshot(snapshot) {
+	// 	//check if player one exists yet. if player1, set player2 status. if player1 !exist, set player1 status
+	// 	if (snapshot.child('player1').exists()){
+	// 		document.getElementById('player1-status').innerHTML()
+	// 	}
+	// }
+
+	this.start.addEventListener("click", this.displayPlayer.bind(this));
+
 }
-player2 = {
-	name:'',
-	wins:0,
-	losses:0
-}
 
-// database.ref().on("value", snapshot(snapshot));
-
-// function snapshot(snapshot) {
-// 	//check if player one exists yet. if player1, set player2 status. if player1 !exist, set player1 status
-// 	if (snapshot.child('player1').exists()){
-// 		document.getElementById('player1-status').innerHTML()
-// 	}
-// }
-
-document.getElementById('start').addEventListener("click", displayPlayer);
-
-function displayPlayer() {
+App.prototype.displayPlayer = function(event) {
 	event.preventDefault();
+
 	var playerName = document.getElementById('player-name').value;
-	if(player1.name === ''){
+	if(player1.name === undefined){
+		document.getElementById('update').innerHTML = `${playerName}, you are player 1`
 		player1.name = playerName;
-		document.getElementById("player1").innerHTML = `<p>${player1.name}</p><span>Wins:${wins} Losses:${losses}</span>`;
+		document.getElementById("player1").innerHTML = `<p>${player1.name}</p><span>Wins:${this.wins} Losses:${this.losses}</span>`;
 		  // Save the new price in Firebase
-		database.ref().set({
+		this.database.ref().set({
 		  player1 : player1
 		});
+		document.getElementById('form').style.visibility = "hidden";
+
 	}else{
+		document.getElementById('update').innerHTML = `${playerName}, you are player 2`
 		player2.name = playerName;
-		document.getElementById("player2").innerHTML = `<p>${player2.name}</p><span>Wins:${wins} Losses:${losses}</span>`;
-		database.ref().set({
-		  player1 : player1
+		document.getElementById("player2").innerHTML = `<p>${player2.name}</p><span>Wins:${this.wins} Losses:${this.losses}</span>`;
+		this.database.ref().set({
+		  player2 : player2
 		});
 		document.getElementById('form').style.visibility = "hidden";
 	}
 }
+
+window.onload = function() {
+  window.App = new App();
+};
