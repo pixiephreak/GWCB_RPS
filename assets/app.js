@@ -16,6 +16,7 @@ function App(){
 	this.playerName;
 	this.hasOpponent = false;
 
+
 	this.wins = 0;
 	this.losses = 0;
 	this.player1 = {
@@ -44,6 +45,7 @@ function App(){
 			console.log('db '+ name);
 			//update values for player1 in DOM
 			document.getElementById("player1").innerHTML = `<p>${name}</p><span>Wins:${wins} Losses:${losses}</span>`;
+			App.me = snapshot.val().title;
 		}else{
 			console.log('title'+snapshot.val().title);
 			var name = snapshot.val().name;
@@ -52,8 +54,11 @@ function App(){
 			console.log('db '+ name);
 			//update values for player1 in DOM
 			document.getElementById("player2").innerHTML = `<p>${name}</p><span>Wins:${wins} Losses:${losses}</span>`;
+			document.getElementById("game-stage").innerHTML = `Player 1's Turn`;
+			document.getElementById('form').style.visibility = "hidden";
+			App.me = snapshot.val().title;
 		}
-	});
+	}).bind(this);
 
 	this.start.addEventListener("click", this.displayPlayer.bind(this));
 
@@ -62,6 +67,7 @@ function App(){
 App.prototype.displayPlayer = function(event) {
 	event.preventDefault();
 	if(App.hasOpponent === false){
+		//TO-DO: refactor following code into a function
 		//save user input to var
 		var playerName = document.getElementById('player-name').value;
 		//save new name in local obj
@@ -70,7 +76,9 @@ App.prototype.displayPlayer = function(event) {
 		this.database.ref().push(this.player1);
 		//log local val of playername
 		console.log('local '+this.player1.name);
-
+		localStorage.setItem('title', this.player1.title);
+		localStorage.setItem('name', this.player1.name);
+		document.getElementById('update').innerHTML= `${localStorage.getItem("name")}, You are ${localStorage.getItem("title")}`;
 		return false;
 	}else{
 		//save user input to var
@@ -81,17 +89,35 @@ App.prototype.displayPlayer = function(event) {
 		this.database.ref().push(this.player2);
 		//log local val of playername
 		console.log('local '+this.player2.name);
-
+		// document.getElementById('game-controls').appendChild('<div>something</div>');
+		localStorage.setItem('title', this.player2.title);
+		localStorage.setItem('name', this.player2.name);
+		document.getElementById('update').innerHTML= `${localStorage.getItem("name")}, You are ${localStorage.getItem("title")}`;
+		//create buttons in firebase and show on both screens?
+		return false;
 	}
 
-	// 	document.getElementById('form').style.visibility = "hidden";
+}
 
-	// }else{
-
-	// }
+App.prototype.createButton = function(){
+	//TO-DO: refactor to create button once with param;
+	var rockButton = document.createElement('button');
+		rockButton.innerHTML = 'rock';
+		document.getElementById('game-controls').appendChild(rockButton);
+		var paperButton = document.createElement('button');
+		paperButton.innerHTML = 'paper';
+		document.getElementById('game-controls').appendChild(paperButton);
+		var scissorsButton = document.createElement('button');
+		scissorsButton.innerHTML = 'scissors';
+		document.getElementById('game-controls').appendChild(scissorsButton);
 }
 
 
+
+
 window.onload = function() {
+  localStorage.clear();
+  //how to clear storage from old game?
+  // firebase.database().ref().remove();
   window.App = new App();
 };
