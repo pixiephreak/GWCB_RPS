@@ -13,36 +13,45 @@ function App(){
 	this.self = this;
 	this.database = firebase.database();
 	this.start = document.getElementById('start');
+	this.playerName;
+	this.hasOpponent = false;
 
 	this.wins = 0;
 	this.losses = 0;
 	this.player1 = {
+		title:'player1',
 		name:'',
 		wins:0,
 		losses:0
 	}
 	this.player2 = {
+		title:'player2',
 		name:'',
 		wins:0,
 		losses:0
 	}
 
 	this.database.ref().on('child_added', function(snapshot) {
-		console.log(this);
-		console.log('in fb');
-			// TO-DO : how to nav to children?
-			console.log(snapshot.val().name);
-		//check if player one exists yet in FB
-		if (snapshot.child('player1').exists()){
-			console.log('in fb');
-			console.log(snapshot.val().player1);
-			// set value in local object to vaule from FB
-			this.player1 = snapshot.val().player1;
-			// update html to refelct current val in fb
+
+		// TO-DO: use .limitToLast(1)?
+		// question: is .val() js or jq ? If jq, why is it working?
+		if(snapshot.val().title === 'player1'){
+			App.hasOpponent = true;
+			console.log('title'+snapshot.val().title);
+			var name = snapshot.val().name;
+			var wins = snapshot.val().wins;
+			var losses = snapshot.val().losses;
+			console.log('db '+ name);
+			//update values for player1 in DOM
+			document.getElementById("player1").innerHTML = `<p>${name}</p><span>Wins:${wins} Losses:${losses}</span>`;
 		}else{
-			// document.getElementById('update').innerHTML = `${playerName}, you are player 2`
-			// player2.name = playerName;
-			// document.getElementById('form').style.visibility = "hidden";
+			console.log('title'+snapshot.val().title);
+			var name = snapshot.val().name;
+			var wins = snapshot.val().wins;
+			var losses = snapshot.val().losses;
+			console.log('db '+ name);
+			//update values for player1 in DOM
+			document.getElementById("player2").innerHTML = `<p>${name}</p><span>Wins:${wins} Losses:${losses}</span>`;
 		}
 	});
 
@@ -52,21 +61,34 @@ function App(){
 
 App.prototype.displayPlayer = function(event) {
 	event.preventDefault();
+	if(App.hasOpponent === false){
+		//save user input to var
+		var playerName = document.getElementById('player-name').value;
+		//save new name in local obj
+		this.player1.name = playerName;
+		//upload data to firebase
+		this.database.ref().push(this.player1);
+		//log local val of playername
+		console.log('local '+this.player1.name);
 
-	var playerName = document.getElementById('player-name').value;
-	if(player1.name === undefined){
-		document.getElementById('update').innerHTML = `${playerName}, you are player 1`
-		player1.name = playerName;
-		document.getElementById("player1").innerHTML = `<p>${player1.name}</p><span>Wins:${this.wins} Losses:${this.losses}</span>`;
-		  // Save the new price in Firebase. TO-DO use set or push?
-		this.database.ref().push({
-		  player1 : player1
-		});
-		document.getElementById('form').style.visibility = "hidden";
-
+		return false;
 	}else{
+		//save user input to var
+		var playerName = document.getElementById('player-name').value;
+		//save new name in local obj
+		this.player2.name = playerName;
+		//upload data to firebase
+		this.database.ref().push(this.player2);
+		//log local val of playername
+		console.log('local '+this.player2.name);
 
 	}
+
+	// 	document.getElementById('form').style.visibility = "hidden";
+
+	// }else{
+
+	// }
 }
 
 
