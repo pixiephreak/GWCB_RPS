@@ -35,11 +35,11 @@ function App(){
 		tool:''
 	}
 
+	//child_added doesnt listen second time.
 	this.database.ref().on("child_added", function(snapshot) {
-		console.log(snapshot.val(),snapshot.child("player1").exists());
+		console.log(snapshot.val());
 
-		// question: is .val() js or jq ? Is it fb syntax
-		if(snapshot.child("player1").exists()){
+		if(snapshot.child("player1").exists() && !snapshot.child("player2").exists()){
 			App.hasOpponent = true;
 			console.log('adding player1 to html','userId'+ snapshot.val().player1.userId);
 			this.player1.name = snapshot.val().player1.name;
@@ -49,7 +49,7 @@ function App(){
 			//update values for player1 in DOM
 			document.getElementById("player1").innerHTML = `<p>${this.player1.name}</p><span>Wins:${this.player1.wins} Losses:${this.player1.losses}</span>`;
 			App.me = snapshot.val().player1.userId;
-		}else{
+		}else if(snapshot.child("player1").exists() && snapshot.child("player2").exists()){
 			console.log('adding player2 to html','userId'+snapshot.val().player2.userId);
 			var name = snapshot.val().player2.name;
 			var wins = snapshot.val().player2.wins;
@@ -67,6 +67,7 @@ function App(){
 	this.rock.addEventListener('click', this.displayRock.bind(this));
 
 }
+
 
 
 
@@ -136,6 +137,6 @@ App.prototype.displayRock = function(){
 window.onload = function() {
   localStorage.clear();
   //how to clear storage from old game?
-  // firebase.database().ref().remove();
+  firebase.database().ref().remove();
   window.App = new App();
 };
