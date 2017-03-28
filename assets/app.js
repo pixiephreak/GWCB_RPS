@@ -19,48 +19,47 @@ function App(){
 	this.playerName;
 	this.hasOpponent = false;
 
-
-	this.wins = 0;
-	this.losses = 0;
 	this.player1 = {
-		title:'player1',
+		userId:'player1',
 		name:'',
 		wins:0,
 		losses:0,
-		choice:''
+		tool:''
 	}
 	this.player2 = {
-		title:'player2',
+		userId:'player2',
 		name:'',
 		wins:0,
 		losses:0,
-		choice:''
+		choice:'',
+		tool:''
 	}
 
-	this.database.ref().on('child_added', function(snapshot) {
-		// TO-DO: DRY
-		// question: is .val() js or jq ? If jq, why is it working?
-		if(snapshot.val().title === 'player1'){
+	this.database.ref().on("child_added", function(snapshot) {
+		console.log(snapshot.val(),snapshot.child("player1").exists());
+
+		// question: is .val() js or jq ? Is it fb syntax
+		if(snapshot.child("player1").exists()){
 			App.hasOpponent = true;
-			console.log('title'+snapshot.val().title);
-			var name = snapshot.val().name;
-			var wins = snapshot.val().wins;
-			var losses = snapshot.val().losses;
-			console.log('db '+ name);
+			console.log('adding player1 to html','userId'+ snapshot.val().player1.userId);
+			this.player1.name = snapshot.val().player1.name;
+			this.player1.wins = snapshot.val().player1.wins;
+			this.player1.losses = snapshot.val().player1.losses;
+			console.log('db '+ this.player1.name);
 			//update values for player1 in DOM
-			document.getElementById("player1").innerHTML = `<p>${name}</p><span>Wins:${wins} Losses:${losses}</span>`;
-			App.me = snapshot.val().title;
+			document.getElementById("player1").innerHTML = `<p>${this.player1.name}</p><span>Wins:${this.player1.wins} Losses:${this.player1.losses}</span>`;
+			App.me = snapshot.val().player1.userId;
 		}else{
-			console.log('title'+snapshot.val().title);
-			var name = snapshot.val().name;
-			var wins = snapshot.val().wins;
-			var losses = snapshot.val().losses;
+			console.log('adding player2 to html','userId'+snapshot.val().player2.userId);
+			var name = snapshot.val().player2.name;
+			var wins = snapshot.val().player2.wins;
+			var losses = snapshot.val().player2.losses;
 			console.log('db '+ name);
 			//update values for player1 in DOM
 			document.getElementById("player2").innerHTML = `<p>${name}</p><span>Wins:${wins} Losses:${losses}</span>`;
-			document.getElementById("game-stage").innerHTML = `Player 1's Turn`;
+			document.getElementById("game-stage").innerHTML = `Wating for player 2`;
 			document.getElementById('form').style.visibility = "hidden";
-			App.me = snapshot.val().title;
+			App.me = snapshot.val().player2.userId;
 		}
 	}).bind(this);
 
@@ -69,36 +68,41 @@ function App(){
 
 }
 
+
+
 App.prototype.displayPlayer = function(event) {
 	event.preventDefault();
+	console.log('click ', this.player1.name);
 	if(App.hasOpponent === false){
+		console.log('writing player1');
 		//TO-DO: refactor following code into a function in order to stay DRY
 		//save user input to var
 		var playerName = document.getElementById('player-name').value;
 		//save new name in local obj
 		this.player1.name = playerName;
 		//upload data to firebase
-		this.database.ref().push(this.player1);
+		this.writeUserData('player1', this.player1.name, this.player1.tool , this.player1.wins, this.player1.losses);
 		//log local val of playername
 		console.log('local '+this.player1.name);
-		localStorage.setItem('title', this.player1.title);
+		localStorage.setItem('userId', this.player1.userId);
 		localStorage.setItem('name', this.player1.name);
-		document.getElementById('update').innerHTML= `${localStorage.getItem("name")}, You are ${localStorage.getItem("title")}`;
+		document.getElementById('update').innerHTML= `${localStorage.getItem("name")}, You are ${localStorage.getItem("userId")}`;
 		document.getElementById('game-controls').style.display = 'block';
 		return false;
 	}else{
+		console.log('making local player2')
 		//save user input to var
 		var playerName = document.getElementById('player-name').value;
 		//save new name in local obj
 		this.player2.name = playerName;
 		//upload data to firebase
-		this.database.ref().push(this.player2);
+		this.writeUserData('player2', this.player2.name, this.player2.tool , this.player2.wins, this.player2.losses);
 		//log local val of playername
-		console.log('local '+this.player2.name);
+		console.log('local'+this.player2.name);
 		// document.getElementById('game-controls').appendChild('<div>something</div>');
-		localStorage.setItem('title', this.player2.title);
+		localStorage.setItem('userId', this.player2.userId);
 		localStorage.setItem('name', this.player2.name);
-		document.getElementById('update').innerHTML= `${localStorage.getItem("name")}, You are ${localStorage.getItem("title")}`;
+		document.getElementById('update').innerHTML= `${localStorage.getItem("name")}, You are ${localStorage.getItem("userId")}`;
 		//create buttons in firebase and show on both screens?
 		document.getElementById('game-controls').style.display = 'block';
 		return false;
@@ -106,11 +110,26 @@ App.prototype.displayPlayer = function(event) {
 
 }
 
+App.prototype.writeUserData = function(userId, name, tool, wins, losses) {
+	var path = 'users/'+ userId;
+	console.log(path);
+  	this.database.ref(path).set({
+  	userId: userId,
+    name: name,
+    tool: tool,
+   	wins: wins,
+   	losses: losses
+  });
+}
+
 App.prototype.displayRock = function(){
 	console.log(this);
-	var me = localStorage.getItem("title");
-	// document.getElementById("game-stage").innerHTML = `${localStorage.getItem("title")} chose rock`;
-
+	var me = localStorage.getItem("userId");
+	// document.getElementById("game-stage").innerHTML = `${localStorage.getItem("userId")} chose rock`;
+	console.log(this.me);
+	this.player1.choice = "whatever";
+	this.database.ref().set(this.player1);
+	console.log(this.player1.choice);
 }
 
 
