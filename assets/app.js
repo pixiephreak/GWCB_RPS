@@ -13,6 +13,9 @@ function App(){
 	this.self = this;
 	this.database = firebase.database();
 	this.start = document.getElementById('start');
+	this.rock = document.getElementById('rock');
+	this.paper = document.getElementById('paper');
+	this.scissors = document.getElementById('scissors');
 	this.playerName;
 	this.hasOpponent = false;
 
@@ -23,18 +26,19 @@ function App(){
 		title:'player1',
 		name:'',
 		wins:0,
-		losses:0
+		losses:0,
+		choice:''
 	}
 	this.player2 = {
 		title:'player2',
 		name:'',
 		wins:0,
-		losses:0
+		losses:0,
+		choice:''
 	}
 
 	this.database.ref().on('child_added', function(snapshot) {
-
-		// TO-DO: use .limitToLast(1)?
+		// TO-DO: DRY
 		// question: is .val() js or jq ? If jq, why is it working?
 		if(snapshot.val().title === 'player1'){
 			App.hasOpponent = true;
@@ -61,13 +65,14 @@ function App(){
 	}).bind(this);
 
 	this.start.addEventListener("click", this.displayPlayer.bind(this));
+	this.rock.addEventListener('click', this.displayRock.bind(this));
 
 }
 
 App.prototype.displayPlayer = function(event) {
 	event.preventDefault();
 	if(App.hasOpponent === false){
-		//TO-DO: refactor following code into a function
+		//TO-DO: refactor following code into a function in order to stay DRY
 		//save user input to var
 		var playerName = document.getElementById('player-name').value;
 		//save new name in local obj
@@ -79,6 +84,7 @@ App.prototype.displayPlayer = function(event) {
 		localStorage.setItem('title', this.player1.title);
 		localStorage.setItem('name', this.player1.name);
 		document.getElementById('update').innerHTML= `${localStorage.getItem("name")}, You are ${localStorage.getItem("title")}`;
+		document.getElementById('game-controls').style.display = 'block';
 		return false;
 	}else{
 		//save user input to var
@@ -94,25 +100,18 @@ App.prototype.displayPlayer = function(event) {
 		localStorage.setItem('name', this.player2.name);
 		document.getElementById('update').innerHTML= `${localStorage.getItem("name")}, You are ${localStorage.getItem("title")}`;
 		//create buttons in firebase and show on both screens?
+		document.getElementById('game-controls').style.display = 'block';
 		return false;
 	}
 
 }
 
-App.prototype.createButton = function(){
-	//TO-DO: refactor to create button once with param;
-	var rockButton = document.createElement('button');
-		rockButton.innerHTML = 'rock';
-		document.getElementById('game-controls').appendChild(rockButton);
-		var paperButton = document.createElement('button');
-		paperButton.innerHTML = 'paper';
-		document.getElementById('game-controls').appendChild(paperButton);
-		var scissorsButton = document.createElement('button');
-		scissorsButton.innerHTML = 'scissors';
-		document.getElementById('game-controls').appendChild(scissorsButton);
+App.prototype.displayRock = function(){
+	console.log(this);
+	var me = localStorage.getItem("title");
+	// document.getElementById("game-stage").innerHTML = `${localStorage.getItem("title")} chose rock`;
+
 }
-
-
 
 
 window.onload = function() {
