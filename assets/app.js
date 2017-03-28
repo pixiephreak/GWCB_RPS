@@ -112,6 +112,10 @@ App.prototype.displayPlayer = function(event) {
 }
 
 App.prototype.writeUserData = function(userId, name, tool, wins, losses) {
+	// var newPostRef = postListRef.push();
+	// newPostRef.set({
+	//     // ...
+	// });
 	var path = 'users/'+ userId;
 	console.log(path);
   	this.database.ref(path).set({
