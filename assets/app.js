@@ -41,25 +41,11 @@ function App(){
 
 		if(snapshot.child("player1").exists() && !snapshot.child("player2").exists()){
 			App.hasOpponent = true;
-			console.log('adding player1 to html','userId'+ snapshot.val().player1.userId);
-			this.player1.name = snapshot.val().player1.name;
-			this.player1.wins = snapshot.val().player1.wins;
-			this.player1.losses = snapshot.val().player1.losses;
-			console.log('db '+ this.player1.name);
-			//update values for player1 in DOM
-			document.getElementById("player1").innerHTML = `<p>${this.player1.name}</p><span>Wins:${this.player1.wins} Losses:${this.player1.losses}</span>`;
-			App.me = snapshot.val().player1.userId;
+			App.createPlayer('player1', snapshot.val().player1)
 		}else if(snapshot.child("player1").exists() && snapshot.child("player2").exists()){
-			console.log('adding player2 to html','userId'+snapshot.val().player2.userId);
-			var name = snapshot.val().player2.name;
-			var wins = snapshot.val().player2.wins;
-			var losses = snapshot.val().player2.losses;
-			console.log('db '+ name);
-			//update values for player1 in DOM
-			document.getElementById("player2").innerHTML = `<p>${name}</p><span>Wins:${wins} Losses:${losses}</span>`;
-			document.getElementById("game-stage").innerHTML = `Wating for player 2`;
+			App.createPlayer('player2' , snapshot.val().player2);
+			document.getElementById("game-stage").innerHTML = `Player 1's turn`;
 			document.getElementById('form').style.visibility = "hidden";
-			App.me = snapshot.val().player2.userId;
 		}
 	});
 
@@ -125,6 +111,21 @@ App.prototype.writeUserData = function(userId, name, tool, wins, losses) {
    	wins: wins,
    	losses: losses
   });
+}
+
+App.prototype.createPlayer = function(localPlayer, snappedPlayer){
+	console.log(this[localPlayer].name, snappedPlayer.name);
+			console.log(localPlayer);
+			localName = this[localPlayer].name;
+			localWins = this[localPlayer].wins;
+			localLosses = this[localPlayer].losses;
+			localName = snappedPlayer.name;
+			localWins = snappedPlayer.wins;
+			localLosses = snappedPlayer.losses;
+			//update values for player1 in DOM
+			document.getElementById(`${localPlayer}`).innerHTML = `<p>${localName}</p><span>Wins:${localWins} Losses:${localLosses}</span>`;
+
+			App.me = snappedPlayer.userId;
 }
 
 App.prototype.displayRock = function(){
