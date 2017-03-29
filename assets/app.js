@@ -141,7 +141,7 @@ App.prototype.displayRock = function(){
 
 window.onload = function() {
   localStorage.clear();
-  //how to clear storage from old game?
+  //clear fb db from previous game
   firebase.database().ref().remove();
   window.App = new App();
 };
