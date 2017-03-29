@@ -36,7 +36,7 @@ function App(){
 	}
 
 	//child_added doesnt listen second time.
-	this.database.ref().on("child_added", function(snapshot) {
+	this.database.ref('users/').on("value", function(snapshot) {
 		console.log(snapshot.val());
 
 		if(snapshot.child("player1").exists() && !snapshot.child("player2").exists()){
@@ -61,7 +61,7 @@ function App(){
 			document.getElementById('form').style.visibility = "hidden";
 			App.me = snapshot.val().player2.userId;
 		}
-	}).bind(this);
+	});
 
 	this.start.addEventListener("click", this.displayPlayer.bind(this));
 	this.rock.addEventListener('click', this.displayRock.bind(this));
