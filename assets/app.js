@@ -31,11 +31,10 @@ function App(){
 		name:'',
 		wins:0,
 		losses:0,
-		choice:'',
 		tool:''
 	}
 
-	//child_added doesnt listen second time.
+
 	this.database.ref('users/').on("value", function(snapshot) {
 		console.log(snapshot.val());
 
@@ -131,12 +130,25 @@ App.prototype.createPlayer = function(localPlayer, snappedPlayer){
 App.prototype.displayRock = function(){
 	console.log(this);
 	var me = localStorage.getItem("userId");
-	// document.getElementById("game-stage").innerHTML = `${localStorage.getItem("userId")} chose rock`;
-	console.log(this.me);
-	this.player1.choice = "whatever";
-	this.database.ref().set(this.player1);
-	console.log(this.player1.choice);
+	document.getElementById("game-stage").innerHTML = `${me} chose rock`;
+	if(userSelectionEvent.toLowerCase() === "r" && compSelection === s || userSelectionEvent.toLowerCase() === "s" && compSelection === p || userSelectionEvent.toLowerCase() === "p" && compSelection === r){
+		userScore.innerHTML = userTally+= 1;
+	}else if(compSelection === r && userSelectionEvent.toLowerCase() === "s" || compSelection === p && userSelectionEvent.toLowerCase() === "r" || compSelection === s && userSelectionEvent.toLowerCase() === "p"){
+		compScore.innerHTML = compTally+= 1;
+	}else if (userSelectionEvent.toLowerCase() === "r" || userSelectionEvent.toLowerCase() === "s" || userSelectionEvent.toLowerCase() === "p"){
+		alert("Tie! Try again.")
+	}else{
+		alert("Please restrict your choice to R, S, or P")
+	}
+	// if(this.me === 'player2'){
+	// 	this.player2.tool = 'rock';
+	// 	this.writeUserData(this.player2.userId, this.player2.name, this.player2.tool, this.player2.wins, this.player2.losses);
+	// }else {
+	// 	this.player2.tool = 'rock';
+	// 	this.writeUserData(this.player1.userId, this.player1.name, this.player1.tool, this.player1.wins, this.player1.losses);
+	// };
 }
+
 
 
 window.onload = function() {
