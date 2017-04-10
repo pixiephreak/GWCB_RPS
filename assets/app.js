@@ -9,7 +9,7 @@
 // Initialize Firebase
 
 function App(){
-	// console.log(this);
+
 	this.self = this;
 	this.database = firebase.database();
 	this.start = document.getElementById('start');
@@ -35,8 +35,8 @@ function App(){
 	}
 
 
+
 	this.database.ref('users/').on("value", function(snapshot) {
-		console.log(snapshot.val());
 
 		if(snapshot.child("player1").exists() && !snapshot.child("player2").exists()){
 			App.hasOpponent = true;
@@ -45,6 +45,10 @@ function App(){
 			App.createPlayer('player2' , snapshot.val().player2);
 			document.getElementById("game-stage").innerHTML = `Player 1's turn`;
 			document.getElementById('form').style.visibility = "hidden";
+		}
+
+		if(snapshot.child("player1/tool").val() === 'rock'){
+			document.getElementById('game-stage').innerHTML = ` Player 1 chose rock. Player 2's Turn.`;
 		}
 	});
 
@@ -58,25 +62,22 @@ function App(){
 
 App.prototype.displayPlayer = function(event) {
 	event.preventDefault();
-	console.log('click ', this.player1.name);
+
 	if(App.hasOpponent === false){
-		console.log('writing player1');
 		//TO-DO: refactor following code into a function in order to stay DRY
-		//save user input to var
+		// save user input to var
 		var playerName = document.getElementById('player-name').value;
 		//save new name in local obj
 		this.player1.name = playerName;
 		//upload data to firebase
 		this.writeUserData('player1', this.player1.name, this.player1.tool , this.player1.wins, this.player1.losses);
 		//log local val of playername
-		console.log('local '+this.player1.name);
 		localStorage.setItem('userId', this.player1.userId);
 		localStorage.setItem('name', this.player1.name);
-		document.getElementById('update').innerHTML= `${localStorage.getItem("name")}, You are ${localStorage.getItem("userId")}`;
+		document.getElementById('update').innerHTML = `${localStorage.getItem("name")}, You are ${localStorage.getItem("userId")}`;
 		document.getElementById('game-controls').style.display = 'block';
 		return false;
 	}else{
-		console.log('making local player2')
 		//save user input to var
 		var playerName = document.getElementById('player-name').value;
 		//save new name in local obj
@@ -84,7 +85,6 @@ App.prototype.displayPlayer = function(event) {
 		//upload data to firebase
 		this.writeUserData('player2', this.player2.name, this.player2.tool , this.player2.wins, this.player2.losses);
 		//log local val of playername
-		console.log('local'+this.player2.name);
 		// document.getElementById('game-controls').appendChild('<div>something</div>');
 		localStorage.setItem('userId', this.player2.userId);
 		localStorage.setItem('name', this.player2.name);
@@ -102,7 +102,6 @@ App.prototype.writeUserData = function(userId, name, tool, wins, losses) {
 	//     // ...
 	// });
 	var path = 'users/'+ userId;
-	console.log(path);
   	this.database.ref(path).set({
   	userId: userId,
     name: name,
@@ -113,11 +112,6 @@ App.prototype.writeUserData = function(userId, name, tool, wins, losses) {
 }
 
 App.prototype.createPlayer = function(localPlayer, snappedPlayer){
-	console.log(this[localPlayer].name, snappedPlayer.name);
-			console.log(localPlayer);
-			localName = this[localPlayer].name;
-			localWins = this[localPlayer].wins;
-			localLosses = this[localPlayer].losses;
 			localName = snappedPlayer.name;
 			localWins = snappedPlayer.wins;
 			localLosses = snappedPlayer.losses;
@@ -128,18 +122,33 @@ App.prototype.createPlayer = function(localPlayer, snappedPlayer){
 }
 
 App.prototype.displayRock = function(){
-	console.log(this);
-	var me = localStorage.getItem("userId");
-	document.getElementById("game-stage").innerHTML = `${me} chose rock`;
-	if(userSelectionEvent.toLowerCase() === "r" && compSelection === s || userSelectionEvent.toLowerCase() === "s" && compSelection === p || userSelectionEvent.toLowerCase() === "p" && compSelection === r){
-		userScore.innerHTML = userTally+= 1;
-	}else if(compSelection === r && userSelectionEvent.toLowerCase() === "s" || compSelection === p && userSelectionEvent.toLowerCase() === "r" || compSelection === s && userSelectionEvent.toLowerCase() === "p"){
-		compScore.innerHTML = compTally+= 1;
-	}else if (userSelectionEvent.toLowerCase() === "r" || userSelectionEvent.toLowerCase() === "s" || userSelectionEvent.toLowerCase() === "p"){
-		alert("Tie! Try again.")
-	}else{
-		alert("Please restrict your choice to R, S, or P")
+	var me = localStorage.getItem('userId');
+	console.log(`me: ${me}`);
+	console.log(`Player 1 tool: ${this.player1.tool}`);
+	console.log(`Player 2 tool: ${this.player2.tool}`);
+
+	if (me === 'player1'){
+		if(this.player2.tool === ''){
+			this.writeUserData('player1', 'player1', 'rock', 0, 0);
+		}
 	}
+
+	if (me === 'player2'){
+		console.log(this.player1.tool);
+	}
+
+
+	// document.getElementById("game-stage").innerHTML = `${me} chose rock`;
+
+	// if(userSelectionEvent.toLowerCase() === "r" && compSelection === s || userSelectionEvent.toLowerCase() === "s" && compSelection === p || userSelectionEvent.toLowerCase() === "p" && compSelection === r){
+	// 	userScore.innerHTML = userTally+= 1;
+	// }else if(compSelection === r && userSelectionEvent.toLowerCase() === "s" || compSelection === p && userSelectionEvent.toLowerCase() === "r" || compSelection === s && userSelectionEvent.toLowerCase() === "p"){
+	// 	compScore.innerHTML = compTally+= 1;
+	// }else if (userSelectionEvent.toLowerCase() === "r" || userSelectionEvent.toLowerCase() === "s" || userSelectionEvent.toLowerCase() === "p"){
+	// 	alert("Tie! Try again.")
+	// }else{
+	// 	alert("Please restrict your choice to R, S, or P")
+	// }
 	// if(this.me === 'player2'){
 	// 	this.player2.tool = 'rock';
 	// 	this.writeUserData(this.player2.userId, this.player2.name, this.player2.tool, this.player2.wins, this.player2.losses);
