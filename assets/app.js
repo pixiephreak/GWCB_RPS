@@ -49,6 +49,8 @@ function App(){
 
 		if(snapshot.child("player1/tool").val() === 'rock'){
 			document.getElementById('game-stage').innerHTML = ` Player 1 chose rock. Player 2's Turn.`;
+			this.player1.tool = snapshot.child("player1/tool").val();
+			console.log(this.player1.tool);
 		}
 	});
 
