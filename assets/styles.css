@@ -33,7 +33,7 @@ button {
 	padding: 1%;
 }
 
-#game div{
+#game div {
 	border: .5rem solid red;
 	padding: 10%;
 	width: 5%;
@@ -41,7 +41,7 @@ button {
 	height: 20%;
 }
 
-#game div span{
+#game div span {
 	font-size: .25rem;
 }
 

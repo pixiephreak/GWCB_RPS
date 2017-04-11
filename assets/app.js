@@ -25,14 +25,14 @@ function App(){
 		wins:0,
 		losses:0,
 		tool:''
-	}
+	};
 	this.player2 = {
 		userId:'player2',
 		name:'',
 		wins:0,
 		losses:0,
 		tool:''
-	}
+	};
 
 
 
@@ -40,7 +40,7 @@ function App(){
 
 		if(snapshot.child("player1").exists() && !snapshot.child("player2").exists()){
 			App.hasOpponent = true;
-			App.createPlayer('player1', snapshot.val().player1)
+			App.createPlayer('player1', snapshot.val().player1);
 		}else if(snapshot.child("player1").exists() && snapshot.child("player2").exists()){
 			App.createPlayer('player2' , snapshot.val().player2);
 			document.getElementById("game-stage").innerHTML = `Player 1's turn`;
@@ -50,9 +50,9 @@ function App(){
 		if(snapshot.child("player1/tool").val() === 'rock' && snapshot.child("player2/tool").val() === ''){
 			document.getElementById('game-stage').innerHTML = ` Player 1 chose rock. Player 2's Turn.`;
 			this.player1.tool = snapshot.child("player1/tool").val();
-			console.log('player1 tool' + this.player1.tool)
+			console.log('player1 tool' + this.player1.tool);
 		}
-		if(snapshot.child("player2/tool").val() === 'rock' && snapshot.child('player1/tool').val() != ''){
+		if(snapshot.child("player2/tool").val() === 'rock' && snapshot.child('player1/tool').val() !== ''){
 			document.getElementById('game-stage').innerHTML = ` Player 2 chose rock. (Result).`;
 			this.player2.tool = snapshot.child("player2/tool").val();
 		}
@@ -72,7 +72,7 @@ App.prototype.displayPlayer = function(event) {
 	if(App.hasOpponent === false){
 		//TO-DO: refactor following code into a function in order to stay DRY
 		// save user input to var
-		var playerName = document.getElementById('player-name').value;
+		playerName = document.getElementById('player-name').value;
 		//save new name in local obj
 		this.player1.name = playerName;
 		//upload data to firebase
@@ -100,7 +100,7 @@ App.prototype.displayPlayer = function(event) {
 		return false;
 	}
 
-}
+};
 
 App.prototype.writeUserData = function(userId, name, tool, wins, losses) {
 	//write object for each player to FB storage
@@ -112,7 +112,7 @@ App.prototype.writeUserData = function(userId, name, tool, wins, losses) {
    	wins: wins,
    	losses: losses
   });
-}
+};
 
 App.prototype.createPlayer = function(localPlayer, snappedPlayer){
 			localName = snappedPlayer.name;
@@ -121,12 +121,12 @@ App.prototype.createPlayer = function(localPlayer, snappedPlayer){
 			//update values for player1 in DOM
 			document.getElementById(`${localPlayer}`).innerHTML = `<p>${localName}</p><span>Wins:${localWins} Losses:${localLosses}</span>`;
 
-}
+};
 
 App.prototype.displayRock = function(){
 	var me = localStorage.getItem('userId');
 	console.log(`me: ${me}`);
-	console.log('player 1tool: '+this.player1.tool)
+	console.log('player 1tool: '+this.player1.tool);
 
 	if (me === 'player1'){
 		if(this.player2.tool === ''){
@@ -140,26 +140,6 @@ App.prototype.displayRock = function(){
 				this.writeUserData('player2', 'player2', 'rock', 0, 0);
 			}
 	}
-
-
-	// document.getElementById("game-stage").innerHTML = `${me} chose rock`;
-
-	// if(userSelectionEvent.toLowerCase() === "r" && compSelection === s || userSelectionEvent.toLowerCase() === "s" && compSelection === p || userSelectionEvent.toLowerCase() === "p" && compSelection === r){
-	// 	userScore.innerHTML = userTally+= 1;
-	// }else if(compSelection === r && userSelectionEvent.toLowerCase() === "s" || compSelection === p && userSelectionEvent.toLowerCase() === "r" || compSelection === s && userSelectionEvent.toLowerCase() === "p"){
-	// 	compScore.innerHTML = compTally+= 1;
-	// }else if (userSelectionEvent.toLowerCase() === "r" || userSelectionEvent.toLowerCase() === "s" || userSelectionEvent.toLowerCase() === "p"){
-	// 	alert("Tie! Try again.")
-	// }else{
-	// 	alert("Please restrict your choice to R, S, or P")
-	// }
-	// if(this.me === 'player2'){
-	// 	this.player2.tool = 'rock';
-	// 	this.writeUserData(this.player2.userId, this.player2.name, this.player2.tool, this.player2.wins, this.player2.losses);
-	// }else {
-	// 	this.player2.tool = 'rock';
-	// 	this.writeUserData(this.player1.userId, this.player1.name, this.player1.tool, this.player1.wins, this.player1.losses);
-	// };
 }
 
 

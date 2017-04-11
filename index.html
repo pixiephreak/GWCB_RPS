@@ -1,45 +1,53 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-	<meta charset="utf-8">
-	<title>Rock Paper Scissors</title>
-	<link rel="stylesheet" type="text/css" href="assets/reset.css">
-	<link rel="stylesheet" type="text/css" href="assets/styles.css">
+    <meta charset="utf-8">
+    <title>Rock Paper Scissors</title>
+    <link rel="stylesheet" type="text/css" href="assets/reset.css">
+    <link rel="stylesheet" type="text/css" href="assets/styles.css">
 
 </head>
+
 <body>
-	<h1>Rock Paper Scissors</h1>
-	<h2 id='update'><h2>
-	<form id='form'>
-	  <div>
-	    <label for="player-name"></label>
-	    <input  id="player-name" type="text" placeholder="Your Name">
-	  </div>
-	  <button id="start" type="submit">Start</button>
-	</form>
-	<div id="game">
-		<div id="player1"><p id="player1-status" class="game-elem">Waiting for player 1</p></div>
-		<div id="game-stage" class="game-elem">Game Hasn't Started</div>
-		<div id="player2"><p id="player2-status" class="game-elem">Waiting for player 2</p></div>
-	</div>
-	<div id="game-controls" style="display: none">
-		<button id='rock'>rock</button>
-		<button id='paper'>paper</button>
-		<button id='scissors'>scissors</button>
-	</div>
+    <h1>Rock Paper Scissors</h1>
+    <h2 id='update'>
+        <h2>
+            <form id='form'>
+                <div>
+                    <label for="player-name"></label>
+                    <input id="player-name" type="text" placeholder="Your Name">
+                </div>
+                <button id="start" type="submit">Start</button>
+            </form>
+            <div id="game">
+                <div id="player1">
+                    <p id="player1-status" class="game-elem">Waiting for player 1</p>
+                </div>
+                <div id="game-stage" class="game-elem">Game Hasn't Started</div>
+                <div id="player2">
+                    <p id="player2-status" class="game-elem">Waiting for player 2</p>
+                </div>
+            </div>
+            <div id="game-controls" style="display: none">
+                <button id='rock'>rock</button>
+                <button id='paper'>paper</button>
+                <button id='scissors'>scissors</button>
+            </div>
 </body>
 <!-- Firebase Reference -->
 <script src="https://www.gstatic.com/firebasejs/live/3.0/firebase.js"></script>
 <script>
-	var config = {
-	  apiKey: "AIzaSyDmkjCyThokV22fOMuDUGbwafvYB3bxCDg",
-	  authDomain: "rps-game-d1ec9.firebaseapp.com",
-	  databaseURL: "https://rps-game-d1ec9.firebaseio.com",
-	  storageBucket: "rps-game-d1ec9.appspot.com",
-	  messagingSenderId: "1058873558218"
-	};
+    var config = {
+    	  apiKey: "AIzaSyDmkjCyThokV22fOMuDUGbwafvYB3bxCDg",
+    	  authDomain: "rps-game-d1ec9.firebaseapp.com",
+    	  databaseURL: "https://rps-game-d1ec9.firebaseio.com",
+    	  storageBucket: "rps-game-d1ec9.appspot.com",
+    	  messagingSenderId: "1058873558218"
+    	};
 
-	firebase.initializeApp(config);
+    	firebase.initializeApp(config);
 </script>
 <script type="text/javascript" src="assets/app.js"></script>
+
 </html>
