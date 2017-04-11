@@ -121,12 +121,12 @@ App.prototype.createPlayer = function(localPlayer, snappedPlayer){
 			//update values for player1 in DOM
 			document.getElementById(`${localPlayer}`).innerHTML = `<p>${localName}</p><span>Wins:${localWins} Losses:${localLosses}</span>`;
 
-			App.me = snappedPlayer.userId;
 }
 
 App.prototype.displayRock = function(){
 	var me = localStorage.getItem('userId');
 	console.log(`me: ${me}`);
+	console.log('player 1tool: '+this.player1.tool)
 
 	if (me === 'player1'){
 		if(this.player2.tool === ''){
@@ -135,9 +135,10 @@ App.prototype.displayRock = function(){
 	}
 
 	if (me === 'player2'){
-			//why isn't player1 tool defined here
-			console.log('writing player 2'+' '+'player1tool:'+" "+this.player1.tool)
-			this.writeUserData('player2', 'player2', 'rock', 0, 0);
+			if (this.player1.tool != ''){
+				console.log('writing player 2'+' '+'player 1tool: '+this.player1.tool)
+				this.writeUserData('player2', 'player2', 'rock', 0, 0);
+			}
 	}
 
 
