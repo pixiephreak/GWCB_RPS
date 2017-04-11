@@ -47,10 +47,14 @@ function App(){
 			document.getElementById('form').style.visibility = "hidden";
 		}
 
-		if(snapshot.child("player1/tool").val() === 'rock'){
+		if(snapshot.child("player1/tool").val() === 'rock' && snapshot.child("player2/tool").val() === ''){
 			document.getElementById('game-stage').innerHTML = ` Player 1 chose rock. Player 2's Turn.`;
 			this.player1.tool = snapshot.child("player1/tool").val();
-			console.log(this.player1.tool);
+			console.log('player1 tool' + this.player1.tool)
+		}
+		if(snapshot.child("player2/tool").val() === 'rock' && snapshot.child('player1/tool').val() != ''){
+			document.getElementById('game-stage').innerHTML = ` Player 2 chose rock. (Result).`;
+			this.player2.tool = snapshot.child("player2/tool").val();
 		}
 	});
 
@@ -99,10 +103,7 @@ App.prototype.displayPlayer = function(event) {
 }
 
 App.prototype.writeUserData = function(userId, name, tool, wins, losses) {
-	// var newPostRef = postListRef.push();
-	// newPostRef.set({
-	//     // ...
-	// });
+	//write object for each player to FB storage
 	var path = 'users/'+ userId;
   	this.database.ref(path).set({
   	userId: userId,
@@ -126,8 +127,6 @@ App.prototype.createPlayer = function(localPlayer, snappedPlayer){
 App.prototype.displayRock = function(){
 	var me = localStorage.getItem('userId');
 	console.log(`me: ${me}`);
-	console.log(`Player 1 tool: ${this.player1.tool}`);
-	console.log(`Player 2 tool: ${this.player2.tool}`);
 
 	if (me === 'player1'){
 		if(this.player2.tool === ''){
@@ -136,7 +135,9 @@ App.prototype.displayRock = function(){
 	}
 
 	if (me === 'player2'){
-		console.log(this.player1.tool);
+			//why isn't player1 tool defined here
+			console.log('writing player 2'+' '+'player1tool:'+" "+this.player1.tool)
+			this.writeUserData('player2', 'player2', 'rock', 0, 0);
 	}
 
 
